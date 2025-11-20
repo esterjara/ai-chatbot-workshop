@@ -1,0 +1,1 @@
+# Solutions (private)\n\nThis folder can contain complete solutions for instructor use. Keep it private if you want to use exercises in a workshop.

@@ -1,0 +1,1 @@
+# Exercise 03 — Custom Prompting\n\nExperiment with prompt templates in `src/utils/prompts.py`. Create at least two different system prompts and compare results.

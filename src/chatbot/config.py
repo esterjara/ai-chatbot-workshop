@@ -12,7 +12,7 @@ class Config:
 
 
 def load_config() -> Config:
-    model_path = os.getenv("MODEL_PATH", "./models/your-model.gguf")
+    model_path = os.getenv("MODEL_PATH", "./models/tinyllama.gguf")
     device = os.getenv("MODEL_DEVICE", "cpu")
     max_tokens = int(os.getenv("MAX_TOKENS", "512"))
     return Config(model_path=model_path, device=device, max_tokens=max_tokens)

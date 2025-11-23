@@ -1,83 +1,120 @@
-from .config import load_config
-from .memory import RollingMemory
-from .model_loader import load_model
-from .agent import Agent
-from src.utils.logging_utils import setup_logger
-from src.utils.prompts import DEFAULT_SYSTEM_PROMPT
-from typing import Any
+"""
+Basic Chatbot using llama-cpp-python.
+"""
 
+from typing import Optional
+from .config import load_config
+from .model_loader import load_model, generate_text
+from llama_cpp import Llama
 import logging
 
 _logger = logging.getLogger(__name__)
 
 
-class Chatbot:
-    def __init__(self, config=None, model=None, memory: RollingMemory | None = None, agent: Agent | None = None):
-        self.config = config or load_config()
-        self.memory = memory or RollingMemory()
-        self.agent = agent or Agent()
-        self.model = model
-        if self.model is None:
-            try:
-                self.model = load_model(self.config.model_path, device=self.config.device)
-            except Exception as e:
-                # Fail fast: require a local model for this workshop setup.
-                raise RuntimeError(
-                    f"Failed to load model: {e}\n"
-                    "Please place a GGUF model in `models/` and set `MODEL_PATH` in a `.env` file, "
-                    "or run `python scripts/download_model.py --hf <repo_id> --out models/your-model.gguf`. "
-                    "See README.md for details."
-                )
-
-    def build_prompt(self, user_input: str) -> str:
-        history = self.memory.get()
-        parts = [DEFAULT_SYSTEM_PROMPT, "\n"]
-        for role, text in history:
-            parts.append(f"{role}: {text}")
-        parts.append(f"user: {user_input}")
-        return "\n".join(parts)
-
-    def generate_response(self, user_input: str) -> str:
-        prompt = self.build_prompt(user_input)
-        # At this point, a valid model is expected. If generation fails, an error
-        # will be returned to the caller.
-
-        # llama-cpp-python usage: model.create(...) or model.generate depending on version
+class BasicChatbot:
+    """
+    A simple chatbot that responds to user queries using a local LLM.
+    
+    This is the foundation for all other chatbot types.
+    """
+    
+    def __init__(
+        self,
+        model_path: str = "./models/tinyllama.gguf",
+        system_prompt: str = "You are a helpful assistant.",
+        max_tokens: int = 256
+    ):
+        """
+        Initialize the BasicChatbot.
+        
+        Args:
+            model_path: Path to GGUF model file
+            system_prompt: System prompt for the model
+            max_tokens: Maximum tokens per response
+        """
+        self.system_prompt = system_prompt
+        self.max_tokens = max_tokens
+        self.model: Optional[Llama] = None
+        
         try:
-            output = self.model.create(prompt=prompt, max_tokens=self.config.max_tokens)
-            # Try to extract text from possible response structures
-            if isinstance(output, dict) and "choices" in output:
-                return output["choices"][0]["text"].strip()
-            if hasattr(output, "generations"):
-                return str(output.generations[0].text).strip()
-            return str(output).strip()
-        except Exception:
+            self.model = load_model(model_path)
+        except Exception as e:
+            raise RuntimeError(
+                f"Failed to load model from {model_path}: {e}\n"
+                "Ensure the model file exists and llama-cpp-python is installed."
+            )
+    
+    def generate_response(self, user_input: str) -> str:
+        """
+        Generate a response to user input.
+        
+        Args:
+            user_input: The user's message
+            
+        Returns:
+            The model's response
+        """
+        full_prompt = f"{self.system_prompt}\n\nUser: {user_input}\nAssistant:"
+        
+        try:
+            response = generate_text(
+                self.model,
+                full_prompt,
+                max_tokens=self.max_tokens
+            )
+            return response
+        except Exception as e:
+            _logger.error(f"Generation failed: {e}")
+            raise
+    
+    def chat(self):
+        """Start an interactive chat loop."""
+        print(f"Chatbot initialized")
+        print(f"System prompt: {self.system_prompt}")
+        print(f"Max tokens: {self.max_tokens}")
+        print("Type 'exit' to quit.\n")
+        
+        while True:
+            user_input = input("You: ").strip()
+            
+            if user_input.lower() == "exit":
+                print("Goodbye!")
+                break
+            
+            if not user_input:
+                continue
+            
             try:
-                # try `generate` fallback
-                out = self.model.generate(prompt)
-                return str(out)
+                response = self.generate_response(user_input)
+                print(f"Assistant: {response}\n")
             except Exception as e:
-                _logger.exception("Model generation failed: %s", e)
-                raise RuntimeError(f"Model generation failed: {e}")
+                print(f"Error: {e}\n")
 
+
+# Legacy Assistant class for backwards compatibility
+class Assistant:
+    """Legacy class for backwards compatibility."""
+    
+    def __init__(self, config=None, model=None, memory=None, agent=None):
+        self.config = config or load_config()
+        self.memory = memory
+        self.agent = agent
+        self.model = model or load_model(self.config.model_path)
+    
     def chat_once(self, user_input: str) -> str:
-        # Agent decision (optional)
-        action = self.agent.decide_action(user_input)
-        if action["type"] == "tool":
-            reply = self.agent.act(action)
-        else:
-            reply = self.generate_response(user_input)
-
-        self.memory.add("user", user_input)
-        self.memory.add("assistant", reply)
-        return reply
-
-    def run_console(self) -> None:
-        setup_logger()
+        """Generate a single response."""
+        prompt = f"User: {user_input}\nAssistant:"
+        return generate_text(self.model, prompt, max_tokens=self.config.max_tokens)
+    
+    def run_console(self):
+        """Run interactive chat loop."""
         print("Starting console chat. Type 'exit' to quit.")
         while True:
             user_input = input("You: ")
             if user_input.strip().lower() in ("exit", "quit"):
                 break
-            reply = self.chat_once(user_input)
-            print("Bot:", reply)
+            try:
+                reply = self.chat_once(user_input)
+                print(f"Assistant: {reply}")
+            except Exception as e:
+                print(f"Error: {e}")

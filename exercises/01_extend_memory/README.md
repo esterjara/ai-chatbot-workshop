@@ -1,1 +1,0 @@
-# Exercise 01 — Extend Memory\n\nImprove `src/chatbot/memory.py` to support semantic retrieval or summarization of older messages. Provide tests or a short demo script.

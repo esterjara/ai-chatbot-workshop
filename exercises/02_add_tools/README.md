@@ -1,1 +1,0 @@
-# Exercise 02 — Add Tools\n\nAdd tool integration (e.g., web search, calculator). Update the `Agent` to orchestrate tools reliably and add an example.

@@ -4,9 +4,11 @@ SOLUTION: Exercise 2b - With Memory (Reference Implementation)
 This chatbot HAS memory. Compare with 2a to see the difference!
 """
 
-from src.chatbot.memory import MemoryChatbot
-from src.chatbot.model_loader import load_model
+import os 
+from dotenv import load_dotenv
+from chatbot import MemoryChatbot
 
+load_dotenv()
 
 def main():
     """
@@ -20,16 +22,17 @@ def main():
     """
     
     # Load model
-    model = load_model("./models/tinyllama.gguf")
+    model_path = os.getenv("MODEL_PATH", "./models/tinyllama.gguf")
+    max_tokens = os.getenv("MAX_TOKENS", 256)
     
     # Create chatbot WITH memory
     # Now the chatbot can remember previous messages!
     memory_turns = 3
     
     chatbot = MemoryChatbot(
-        model=model,
+        model_path=model_path,
         system_prompt="You are a helpful assistant with memory. Remember the conversation context.",
-        max_tokens=256,
+        max_tokens=max_tokens,
         max_memory_turns=memory_turns
     )
     
@@ -54,10 +57,8 @@ def main():
                 print("Memory is empty.\n")
             else:
                 print("Conversation history:")
-                for msg in messages:
-                    role = msg.get("role", "unknown").upper()
-                    content = msg.get("content", "")
-                    print("  {0}: {1}".format(role, content))
+                for role, content in messages:
+                    print("  {0}: {1}".format(role.upper(), content))
                 print()
             continue
         elif user_input.lower() == "clear":

@@ -69,10 +69,6 @@ class BasicChatbot:
     
     def chat(self):
         """Start an interactive chat loop."""
-        print(f"Chatbot initialized")
-        print(f"System prompt: {self.system_prompt}")
-        print(f"Max tokens: {self.max_tokens}")
-        print("Type 'exit' to quit.\n")
         
         while True:
             user_input = input("You: ").strip()

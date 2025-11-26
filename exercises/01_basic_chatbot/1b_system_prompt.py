@@ -2,8 +2,11 @@
 Exercise 1b: Modify the System Prompt
 Learn how system prompts control chatbot behavior and personality.
 """
+import os
+from dotenv import load_dotenv
+from chatbot import BasicChatbot
 
-from src.chatbot.chatbot import BasicChatbot
+load_dotenv()
 
 
 def main():
@@ -15,9 +18,10 @@ def main():
     - How prompts affect response quality
     - Prompt engineering basics
     """
-    
-    model_path = "./models/tinyllama.gguf"
-    max_tokens = 256
+
+    # Load model
+    model_path = os.getenv("MODEL_PATH", "./models/tinyllama.gguf")
+    max_tokens = os.getenv("MAX_TOKENS", 256)
     
     # TODO: Try each of these system prompts
     system_prompt = "You are a helpful assistant. Answer concisely."

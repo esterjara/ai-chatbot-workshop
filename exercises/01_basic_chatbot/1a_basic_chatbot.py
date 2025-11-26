@@ -1,12 +1,12 @@
 """
 Exercise 1a: Create Your First Chatbot
 Minimal example of using BasicChatbot with a local LLM.
-
-TODO: Run this chatbot and have a simple conversation.
 """
+import os 
+from dotenv import load_dotenv
+from chatbot import BasicChatbot
 
-from src.chatbot.chatbot import BasicChatbot
-
+load_dotenv()
 
 def main():
     """
@@ -18,12 +18,12 @@ def main():
     - Interactive chat loop
     """
     
-    # Your model file
-    model_path = "./models/tinyllama.gguf"
+    # Load model
+    model_path = os.getenv("MODEL_PATH", "./models/tinyllama.gguf")
+    max_tokens = os.getenv("MAX_TOKENS", 256)
     
     # Basic system prompt
     system_prompt = "You are a helpful assistant. Answer concisely."
-    max_tokens = 256
     
     # Create a BasicChatbot instance
     chatbot = BasicChatbot(

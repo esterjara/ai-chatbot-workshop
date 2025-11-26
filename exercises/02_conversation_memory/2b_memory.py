@@ -3,10 +3,11 @@ Exercise 2b: Add Memory - The Solution
 This chatbot HAS memory. It remembers the conversation.
 Compare with Exercise 2a to see the difference!
 """
+import os 
+from dotenv import load_dotenv
+from chatbot import MemoryChatbot
 
-from src.chatbot.memory import MemoryChatbot
-from src.chatbot.model_loader import load_model
-
+load_dotenv()
 
 def main():
     """
@@ -15,14 +16,14 @@ def main():
     """
     
     # Load model
-    model = load_model("./models/tinyllama.gguf")
-    
+    model_path = os.getenv("MODEL_PATH", "./models/tinyllama.gguf")
+    max_tokens = os.getenv("MAX_TOKENS", 256)
     memory_turns = 3
     
     chatbot = MemoryChatbot(
-        model=model,
+        model_path=model_path,
         system_prompt="You are a helpful assistant with memory. Remember the conversation context.",
-        max_tokens=256,
+        max_tokens=max_tokens,
         max_memory_turns=memory_turns
     )
     
@@ -42,14 +43,16 @@ def main():
         elif user_input.lower() == "history":
             # TODO: EXERCISE - Show conversation history
             # Hint: Get messages from chatbot.memory.get()
-            # Loop through and print each message
-            # Format: "  ROLE: message_text"
+            # The memory returns a list of tuples: (role, content)
+            # Loop through and unpack each tuple: for role, content in messages:
+            # Print each message in format: "  ROLE: content"
+            # Don't forget to print a newline at the end
             
             pass
         elif user_input.lower() == "clear":
             # TODO: EXERCISE - Clear the memory buffer
-            # Hint: Use chatbot.memory.clear()
-            # Then print a message confirming it was cleared
+            # Hint: Call chatbot.memory.clear()
+            # Then print "Memory cleared.\n" to confirm
             
             pass
         

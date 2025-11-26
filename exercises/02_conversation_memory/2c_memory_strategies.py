@@ -3,9 +3,11 @@ Exercise 2c: Explore Different Memory Strategies
 Compare how different memory configurations affect conversations.
 """
 
-from src.chatbot.memory import MemoryChatbot
-from src.chatbot.model_loader import load_model
+import os 
+from dotenv import load_dotenv
+from chatbot import MemoryChatbot
 
+load_dotenv()
 
 def main():
     """
@@ -14,7 +16,8 @@ def main():
     """
     
     # Load model
-    model = load_model("./models/tinyllama.gguf")
+    model_path = os.getenv("MODEL_PATH", "./models/tinyllama.gguf")
+    max_tokens = os.getenv("MAX_TOKENS", 256)
     
     # TODO: Change this value to test different memory buffer sizes
     # Try: 1 (tiny), 3 (small), 5 (medium), 10 (large)
@@ -22,9 +25,9 @@ def main():
     
     # Create chatbot with the current memory configuration
     chatbot = MemoryChatbot(
-        model=model,
+        model_path=model_path,
         system_prompt="You are a helpful assistant with configurable memory.",
-        max_tokens=256,
+        max_tokens=max_tokens,
         max_memory_turns=memory_turns
     )
     
@@ -42,13 +45,14 @@ def main():
             break
         elif user_input.lower() == "history":
             # Show stored messages in buffer
-            history = chatbot.memory.get()
-            print("\n[Buffer: {0} messages]".format(len(history)))
-            
-            for role, text in history:
-                preview = (text[:50] + "...") if len(text) > 50 else text
-                print("  {0}: {1}".format(role.upper(), preview))
-            print()
+            messages = chatbot.memory.get()
+            if not messages:
+                print("Memory is empty.\n")
+            else:
+                print("Conversation history:")
+                for role, content in messages:
+                    print("  {0}: {1}".format(role.upper(), content))
+                print()
             continue
         elif user_input.lower() == "stats":
             # TODO: EXERCISE - Show memory statistics

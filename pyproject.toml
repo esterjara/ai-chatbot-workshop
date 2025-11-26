@@ -1,18 +1,22 @@
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[project]
-name = "ai-chatbot-workshop"
+[tool.poetry]
+name = "ai-chatbot"
 version = "0.1.0"
 description = "Educational scaffold for a local AI chatbot workshop"
 readme = "README.md"
-requires-python = ">=3.10"
+authors = ["Ester Jara"]
+license = "MIT"
+packages = [{include = "chatbot", from = "src"}]
 
-[project.optional-dependencies]
-dev = ["pytest"]
-
-[project.dependencies]
+[tool.poetry.dependencies]
+python = ">=3.10"
 python-dotenv = "*"
-# If you plan to use local GGUF models with llama-cpp-python
 llama-cpp-python = "*"
+requests = "*"
+huggingface-hub = "*"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,3 +1,9 @@
+"""
+Model Loader Module
+
+This module handles loading LLM models from local GGUF files using `llama-cpp-python`.
+"""
+
 from typing import Any
 import logging
 import os
@@ -66,37 +72,3 @@ def load_embedding_model(model_path: str, **kwargs) -> Any:
     model = Llama(model_path=model_path, n_ctx=2048, n_gpu_layers=0, verbose=False, embedding=True)
     return model
 
-
-def generate_text(model: Any, prompt: str, max_tokens: int = 256, temperature: float = 0.7, response_format: dict = None, **kwargs) -> str:
-    """Generate text from a prompt using the loaded model.
-    
-    Args:
-        model: The loaded Llama model
-        prompt: The input prompt
-        max_tokens: Maximum tokens to generate
-        temperature: Sampling temperature (0.0 = deterministic, 1.0 = more random)
-        **kwargs: Additional generation parameters
-        
-    Returns:
-        Generated text as a string
-    """
-    try:
-        # Build generation parameters
-        gen_params = {
-            "max_tokens": max_tokens,
-            "temperature": temperature,
-            "stop": ["User:", "\n\n"],
-            "echo": False,
-            **kwargs
-        }
-        
-        output = model(prompt, **gen_params)
-        
-        # Extract text from the response
-        if isinstance(output, dict) and "choices" in output:
-            return output["choices"][0]["text"].strip()
-        return str(output).strip()
-        
-    except Exception as e:
-        _logger.error(f"Text generation failed: {e}")
-        raise

@@ -1,6 +1,6 @@
 # Exercise 2: Conversation Memory
 
-This exercise teaches you about memory in conversational AI through **4 progressive exercises**.
+This exercise introduces memory in conversational AI through **4 progressive exercises**.
 
 Each explores a different aspect of memory management:
 - **2a**: Identify the problem (no memory)
@@ -67,7 +67,7 @@ Assistant: [Still forgotten!]
 ## Exercise 2b: Chat WITH Memory - The Solution
 
 ### Objective
-Learn how memory buffer enables context awareness.
+Investigate how memory buffer enables context awareness.
 
 ### What You'll Learn
 - How to store conversation history

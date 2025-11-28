@@ -1,19 +1,6 @@
 """
-Exercise 3b: Adding a New Tool and Orchestration
-Extend the multi-agent system by adding a new tool and watch the LLM orchestrate it.
-
-What You'll Learn:
------------------
-- How to add new tools to existing agents
-- How the LLM intelligently selects the right tool
-- Tool orchestration in action (no hardcoded if/else!)
-
-The Challenge:
--------------
-Add a "trigonometry" tool that calculates trigonometric functions:
-- "What is the sine of 30?" → sin(30°) = 0.50
-- "Calculate cos of 45" → cos(45°) = 0.71
-- "What's the tangent of 60?" → tan(60°) = 1.73
+SOLUTION: Exercise 3b - Adding a New Tool and Orchestration
+This is the complete solution showing how to add a percentage calculator tool.
 """
 import logging
 import re
@@ -25,17 +12,18 @@ from chatbot import (
     LLMIntentClassifier,
     load_model,
 )
-from tools import calculator, logarithm
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from tools import calculator, logarithm
 logging.basicConfig(level=logging.INFO)
+
 
 # ============================================================================
 # TOOL IMPLEMENTATIONS
 # ============================================================================
-# calculator and advanced_math are imported from tools.py
-# You'll add the trigonometry function below
 
-# TODO: Create your new tool here!
 def trigonometry(input: str) -> str:
     """
     Trigonometric calculations.
@@ -53,11 +41,32 @@ def trigonometry(input: str) -> str:
         trigonometry("cos 45") → "cos(45°) = 0.71"
         trigonometry("tan of 60") → "tan(60°) = 1.73"
     """
-    # TODO: Implement this function
-    # Hint: Use the math module (math.sin, math.cos, math.tan)
-    # Remember to convert degrees to radians: math.radians(angle)
-    # Extract the angle using regex: re.findall(r'\d+\.?\d*', input)
-    return result
+    try:
+        import math
+        input = input.lower().strip()
+        
+        # Extract the angle value
+        numbers = re.findall(r'\d+\.?\d*', input)
+        if not numbers:
+            return "No angle found in input"
+        
+        angle_deg = float(numbers[0])
+        angle_rad = math.radians(angle_deg)
+        
+        # Determine which function
+        if "sin" in input:
+            result = math.sin(angle_rad)
+            return f"sin({angle_deg}°) = {result:.2f}"
+        elif "cos" in input:
+            result = math.cos(angle_rad)
+            return f"cos({angle_deg}°) = {result:.2f}"
+        elif "tan" in input:
+            result = math.tan(angle_rad)
+            return f"tan({angle_deg}°) = {result:.2f}"
+        
+        return "Unsupported operation. Try: 'sin of 30', 'cos 45', or 'tan 60'"
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 
 def main():
@@ -65,9 +74,9 @@ def main():
     Build multi-agent system and add a new tool.
     """
     print("=" * 70)
-    print("Exercise 3b: Adding a New Tool")
+    print("SOLUTION: Exercise 3b - Adding a New Tool")
     print("=" * 70)
-    print("\nBuilding multi-agent system with NEW trigonometry tool...\n")
+    print("\nBuilding multi-agent system with trigonometry tool...\n")
     
     # Step 1: Load model
     model = load_model("models/tinyllama.gguf")
@@ -85,7 +94,7 @@ def main():
         model=model
     )
     
-    # Calculator Agent - NOW WITH 3 TOOLS! (added trigonometry)
+    # Calculator Agent - WITH 3 TOOLS (including percentage_calculator)
     calculator_tools = [
         Tool(
             name="calculator",
@@ -103,15 +112,15 @@ def main():
                 "input": "Operation description as a string (e.g., 'ln of 5', 'log of 100', 'log base 2 of 8')"
             }
         ),
-        # TODO: Add your trigonometry tool here
-        # Tool(
-        #     name="trigonometry",
-        #     description="Calculates trigonometric functions (sin, cos, tan) in degrees. Use when request contains 'sin', 'cos', 'tan', 'sine', 'cosine', or 'tangent'.",
-        #     function=trigonometry,
-        #     entities={
-        #         "input": "Trigonometric expression as a string (e.g., 'sin of 30', 'cos 45', 'tangent of 60')"
-        #     }
-        # )
+        # SOLUTION: New trigonometry tool added here
+        Tool(
+            name="trigonometry",
+            description="Calculates trigonometric functions (sin, cos, tan) for angles in degrees. Use ONLY when request contains 'sin', 'cos', 'tan', 'sine', 'cosine', or 'tangent'.",
+            function=trigonometry,
+            entities={
+                "input": "Trigonometric expression as a string (e.g., 'sin of 30', 'cos 45', 'tangent of 60')"
+            }
+        ),
     ]
     
     calculator_agent = Agent(
@@ -145,7 +154,25 @@ def main():
     print("=" * 70)
     print("Testing Tool Orchestration")
     print("=" * 70)
+    print("\nWatch how the LLM intelligently selects the right tool!\n")
+    
+    test_requests = [
+        # NEW: Trigonometry (should use 'trigonometry' tool)
+        "What is the sine of 30?",
+        "Calculate cos of 45",
+    ]
+    
+    for request in test_requests:
+        print(f"👤 User: {request}")
+        response = orchestrator.execute(request)
+        print(f"🤖 Bot: {response}")
+        print(f"   (Tool orchestration happened automatically!)\n")
 
+    
+    # Step 6: Interactive mode
+    print("=" * 70)
+    print("Interactive Mode - Try Different Math Requests!")
+    print("=" * 70)
     print("Type 'exit' to quit\n")
     
     while True:

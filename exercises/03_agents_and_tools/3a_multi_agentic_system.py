@@ -22,7 +22,7 @@ from chatbot import (
     LLMIntentClassifier,
     load_model,
 )
-from tools import calculator, advanced_math
+from tools import calculator, logarithm
 
 logging.basicConfig(level=logging.INFO)
 
@@ -60,18 +60,18 @@ def main():
     calculator_tools = [
         Tool(
             name="calculator",
-            description="Performs ONLY basic arithmetic operations: addition (+), subtraction (-), multiplication (*), division (/). Use ONLY for expressions with these operators.",
+            description="Performs ONLY basic arithmetic operations: addition (+), subtraction (-), multiplication (*), division (/).",
             function=calculator,
             entities={
                 "input": "Math expression as a string (e.g., '5 + 3', '10 / 2', '8 * 4')"
             }
         ),
         Tool(
-            name="advanced_math",
-            description="Performs advanced math operations like square root and exponentiation. Use for 'sqrt', 'square root', 'power', or exponents.",
-            function=advanced_math,
+            name="logarithm",
+            description="Performs logarithmic calculations: natural log, log10, and custom-base logarithms.",
+            function=logarithm,
             entities={
-                "input": "Operation description as a string (e.g., 'square root of 16', '2 power 3')"
+                "input": "Operation description as a string (e.g., 'ln of 5', 'log of 100', 'log base 2 of 8')"
             }
         )
     ]
@@ -126,8 +126,8 @@ def main():
         # Basic arithmetic (should use 'calculator' tool)
         "What is 25 + 17?",
         
-        # Advanced math (should use 'advanced_math' tool)
-        "Calculate 2 power 4"
+        # Logarithmic calculations (should use 'logarithm' tool)
+        "Calculate the logarithm of 100"
     ]
     
     for request in test_requests:
@@ -137,7 +137,9 @@ def main():
         print(f"   (Tool orchestration happened automatically!)\n")
 
     # Step 6: Interactive mode
+    print("=" * 70)
     print("Interactive Mode - Try Different Requests!")
+    print("=" * 70)
     print("Type 'exit' to quit\n")
     
     while True:

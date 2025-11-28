@@ -73,6 +73,7 @@ def advanced_math(input: str) -> str:
     """
     try:
         input = input.lower().strip()
+        print(input)
         
         # Square root
         if "square root" in input or "sqrt" in input:
@@ -83,13 +84,67 @@ def advanced_math(input: str) -> str:
                 return f"√{num} = {result:.2f}"
         
         # Power
-        if "power" in input or "^" in input:
+        if "power" in input or "^" in input or "**" in input or "pow" in input:
             numbers = re.findall(r'\d+\.?\d*', input)
+            print(numbers)
             if len(numbers) >= 2:
                 base, exp = float(numbers[0]), float(numbers[1])
                 result = base ** exp
                 return f"{base}^{exp} = {result:.2f}"
         
         return "Unsupported input. Try: 'square root of 16' or '2 power 3'"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+def logarithm(input: str) -> str:
+    """
+    Advanced mathematical operations.
+
+    This tool performs logarithmic operations.
+
+    Supports:
+        - log of X
+        - log base B of X
+        - natural log / ln of X
+
+    Args:
+        input: Description like:
+               "log of 100", "log base 2 of 32", "ln of 5", "natural log of 7"
+
+    Returns:
+        Calculated result
+    """
+    try:
+
+        text = input.lower().strip()
+        print(text)
+
+        # Natural log: "ln", "natural log"
+        if "ln" in text or "natural log" in text:
+            numbers = re.findall(r'\d+\.?\d*', text)
+            if numbers:
+                num = float(numbers[0])
+                result = math.log(num)
+                return f"ln({num}) = {result:.6f}"
+
+        # Log base notation: "log base 2 of 32"
+        if "base" in text and "log" in text:
+            numbers = re.findall(r'\d+\.?\d*', text)
+            if len(numbers) >= 2:
+                base = float(numbers[0])
+                value = float(numbers[1])
+                result = math.log(value, base)
+                return f"log base {base} of {value} = {result:.6f}"
+
+        # Simple log: "log of 100", "log(100)"
+        if "log" in text:
+            numbers = re.findall(r'\d+\.?\d*', text)
+            if numbers:
+                num = float(numbers[0])
+                # default: natural log
+                result = math.log(num)
+                return f"log({num}) = {result:.6f}"
+
+        return "Unsupported input. Try: 'log of 100', 'log base 2 of 32', or 'ln of 5'"
     except Exception as e:
         return f"Error: {str(e)}"

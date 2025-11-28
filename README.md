@@ -65,6 +65,18 @@ The workshop is organized into progressive exercises:
 After completing the setup, try these examples:
 
 ```bash
+# Exercise 0a: Python check
+poetry run python exercises/00_environment_setupw/0a_python_check.py
+
+# Exercise 0b: Poetry installation
+poetry run python exercises/00_environment_setup/0b_poetry_install.py
+
+# Exercise 0c: Dependencies
+poetry run python exercises/00_environment_setup/0c_dependencies.py
+
+# Exercise 0d: Download LLM model
+poetry run python exercises/00_environment_setup/0d_download_model.py
+
 # Exercise 1a: Basic chatbot
 poetry run python exercises/01_basic_chatbot/1a_basic_chatbot.py
 
@@ -179,6 +191,11 @@ ai-chatbot-workshop/
 │   └── prompts.py           # Centralized prompt templates
 │
 ├── exercises/               # Workshop exercises
+│   ├── 00_environment_setup/   # Environment set up
+│   │   ├── 0a_python_check.py
+│   │   ├── 0b_poetry_install.py
+│   │   ├── 0c_dependencies.py
+│   │   └── 0d_download_model.py
 │   ├── 01_basic_chatbot/   # Introduction to chatbots
 │   │   ├── solutions/
 │   │   ├── 1a_basic_chatbot.py

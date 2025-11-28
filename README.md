@@ -1,125 +1,410 @@
-# ai-chatbot-workshop
+# From Zero to Chatbot: Create Your Own Chatbot with Python
 
-This repository is an workshop scaffold focused on engineering practical, local AI chat systems. It emphasizes clear, reproducible patterns for deploying compact language models locally, composing them with retrieval and tool-based components, and building maintainable teaching examples. The goal is not only to demonstrate a running chatbot, but to expose trade-offs and design choices you will encounter when moving from prototype to production-ready local deployments.
+This repository contains the hands-on materials for the **"From Zero to Chatbot"** workshop. This technical workshop guides you through building an AI assistant from scratch using Python and local language models. You'll learn practical engineering patterns for deploying compact language models locally, implementing conversation memory, building tool-based agentic systems, and creating maintainable chat applications.
 
-What you'll learn
------------------
+The workshop emphasizes clear, reproducible patterns and exposes real-world trade-offs and design choices you'll encounter when building chatbot systems with local models.
 
-- Environment & provisioning: create reproducible Python environments, manage dependencies, and provision compact GGUF models for local inference. Learn hardware and performance trade-offs for CPU vs GPU/accelerator setups.
-- Local model engineering: how to load and run compact GGUF models (via `llama-cpp-python`), troubleshoot common errors, and wire a stable inference loop.
-- Prompt engineering & templating: system prompts, few-shot examples, prompt templates, temperature and decoding controls, and techniques for reducing hallucinations.
-- Conversation state & memory: rolling windows, conversation summarization, and approaches for maintaining coherence across long multi-turn dialogues.
-- Retrieval-Augmented Generation (RAG): build an embedding-based retriever, index documents with FAISS, and augment prompts with retrieved context to improve factuality.
-- Agentic systems & tools: design simple agents that decide when to call tools (search, calculator, web fetch), structure tool interfaces safely, and integrate with orchestration libraries (e.g., LangChain) when desired.
-- Evaluation & iteration: simple metrics and human-in-the-loop methods to evaluate responses, measure latency/throughput, and iterate on prompts and memory strategies.
-- Packaging & reproducibility: patterns for scripts, notebooks, and download helpers so workshop participants can replicate results easily.
+## What You'll Learn
+
+1. **Environment & Provisioning**
+   - Create reproducible Python environments with Poetry
+   - Manage dependencies and provision compact GGUF models
+   - Understand hardware and performance trade-offs (CPU vs GPU)
+
+2. **Local Model Engineering**
+   - Load and run compact GGUF models via `llama-cpp-python`
+   - Troubleshoot common errors and wire stable inference loops
+   - Optimize model parameters for your hardware
+
+3. **Prompt Engineering & Templating**
+   - Design effective system prompts and few-shot examples
+   - Control temperature and decoding parameters
+   - Reduce hallucinations through prompt techniques
+
+4. **Conversation State & Memory**
+   - Implement rolling windows for conversation history
+   - Build conversation summarization strategies
+   - Maintain coherence across long multi-turn dialogues
+
+5. **Agentic Systems & Tools**
+   - Design agents that decide when to call tools
+   - Structure tool interfaces safely
+   - Integrate calculator and custom tools
+   - Build multi-agent systems with intent classification
+
+6. **Packaging & Reproducibility**
+   - Structure projects for easy replication
+   - Use Poetry for dependency management
+   - Share and deploy your chatbot
+
+## Workshop Exercises
+
+The workshop is organized into progressive exercises:
+
+### Exercise 1: Basic Chatbot (01_basic_chatbot/)
+- **1a**: Build a simple single-turn chatbot
+- **1b**: Understand system prompts and prompt engineering
+- Learn model loading and basic interaction patterns
+
+### Exercise 2: Conversation Memory (02_conversation_memory/)
+- **2a**: See the problem - chatbot without memory
+- **2b**: Implement conversation history with rolling memory
+- **2c**: Explore different memory strategies
+- **2d**: Build conversation summarization for long dialogues
+
+### Exercise 3: Agents and Tools (03_agents_and_tools/)
+- **3a**: Build a multi-agentic system with intent classification
+- **3b**: Implement tool calling and orchestration
+- Create agents that decide when to use tools
+- Add custom tools (calculator, etc.)
+
+## Quick Start Examples
+
+**⚠️ IMPORTANT**: You must complete the full setup process in the [Getting Started](#getting-started) section below before running any of these exercises. This includes installing Poetry, installing dependencies, and downloading a model.
+
+After completing the setup, try these examples:
+
+```bash
+# Exercise 1a: Basic chatbot
+poetry run python exercises/01_basic_chatbot/1a_basic_chatbot.py
+
+# Exercise 1b: System prompts
+poetry run python exercises/01_basic_chatbot/1b_system_prompt.py
+
+# Exercise 2a: Chatbot without memory
+poetry run python exercises/02_conversation_memory/2a_no_memory.py
+
+# Exercise 2b: Chatbot with memory
+poetry run python exercises/02_conversation_memory/2b_memory.py
+
+# Exercise 2c: Memory strategies
+poetry run python exercises/02_conversation_memory/2c_memory_strategies.py
+
+# Exercise 2d: Summarization memory
+poetry run python exercises/02_conversation_memory/2d_summarize_memory.py
+
+# Exercise 3a: Multi-agentic system
+poetry run python exercises/03_agents_and_tools/3a_multi_agentic_system.py
+
+# Exercise 3b: Tools and orchestration
+poetry run python exercises/03_agents_and_tools/3b_tools_and_orchestration.py
+```
+
+## Dependencies
+
+This project uses the following main dependencies (all managed through Poetry):
+
+- **llama-cpp-python**: Python bindings for llama.cpp, enabling local inference of GGUF models
+- **python-dotenv**: Load environment variables from `.env` files
+- **requests**: HTTP library used by the model download script
+- **huggingface-hub**: Download models from Hugging Face repositories
+
+Development dependencies:
+- **pytest**: Testing framework
+
+All dependencies are automatically installed when you run `poetry install`. See `pyproject.toml` for the complete dependency list.
+
+## Workshop Outline
+
+**Total Duration**: ~2 hours
+
+1. **Environment Setup** (15-20 minutes)
+   - Python and Poetry installation
+   - Model provisioning (download GGUF model)
+   - Environment configuration
+
+2. **Prompt Design & Single-Turn Inference** (20 minutes)
+   - Basic chatbot structure (Exercise 1a)
+   - System prompts and prompt engineering (Exercise 1b)
+   - Model parameters and configuration
+
+3. **Conversation Memory** (30 minutes)
+   - Understanding the problem: no memory (Exercise 2a)
+   - Implementing rolling memory (Exercise 2b)
+   - Memory strategies: window vs. buffer (Exercise 2c)
+   - Summarization techniques (Exercise 2d)
+
+4. **Agentic Systems & Tools** (30 minutes)
+   - Intent classification and routing (Exercise 3a)
+   - Tool definition and calling patterns (Exercise 3b)
+   - Multi-agent orchestration
+   - Tool selection with LLMs
+
+5. **Q&A and Next Steps** (15-20 minutes)
+   - Troubleshooting
+   - Next steps and extensions
+
+## Troubleshooting
+
+### Model Loading Issues
+- Ensure `MODEL_PATH` in `.env` points to a valid GGUF file
+- Check that the model file exists in the `models/` directory
+- Verify you have enough RAM for the model size
+
+### llama-cpp-python Installation
+- If installation fails, try: `pip install llama-cpp-python --no-cache-dir`
+- For GPU support, see: https://github.com/abetlen/llama-cpp-python#installation
+
+### Poetry Issues
+- Update Poetry: `pip install --upgrade poetry`
+- Clear cache: `poetry cache clear --all pypi`
+- Reinstall: `poetry install --no-cache`
+
+## Additional Resources
+
+- [llama-cpp-python Documentation](https://github.com/abetlen/llama-cpp-python)
+- [Hugging Face GGUF Models](https://huggingface.co/models?library=gguf)
+- [Prompt Engineering Guide](https://www.promptingguide.ai/)
+
+## License
+
+MIT License - See LICENSE file for details.
 
 Repository layout
 -----------------
 
-- `src/` : Core library code for loading models, memory, RAG and a simple agent.
-- `examples/` : Scripts showing increasing complexity: `basic_chat.py`, `memory_chat.py`, `agentic_chat.py`, `rag_chat.py`.
- - `examples/` : Scripts showing increasing complexity: `basic_chat.py`, `memory_chat.py`, `agentic_chat.py`, `rag_chat.py`, and an optional `agentic_langchain.py` that demonstrates integration with LangChain.
-- `notebooks/` : Jupyter notebooks for guided experiments.
-- `models/` : Suggested location for GGUF model files (ignored by git).
-- `exercises/` : Exercise folders to extend workshop tasks.
+## Repository Structure
 
-Prerequisites
--------------
-
-- No prior ML experience required; basic Python familiarity is enough.
-- Recommended: Python 3.9+ (3.10+ preferred).
-- Disk space: downloading a model requires a few hundred MB to multiple GB depending on model size.
-
-Installation (Windows PowerShell)
---------------------------------
-
-Create and activate a virtual environment, then install the runtime dependencies listed in `requirements.txt`:
-
-```powershell
-python -m venv .venv; .\.venv\Scripts\Activate.ps1
-pip install -U pip
-pip install -r requirements.txt
+```
+ai-chatbot-workshop/
+├── src/chatbot/              # Core library code
+│   ├── chatbot.py           # Basic chatbot implementation
+│   ├── memory.py            # Conversation memory management
+│   ├── model_loader.py      # Model loading utilities
+│   ├── text_generator.py    # Text generation functions
+│   ├── chat_utils.py        # Shared chat interface utilities
+│   ├── agent.py             # Agent and orchestration
+│   ├── intent_classifier.py # Intent classification
+│   ├── tool.py              # Tool definitions
+│   ├── prompts.py           # Centralized prompt templates
+│   └── rag.py               # RAG (placeholder for future)
+│
+├── exercises/               # Workshop exercises
+│   ├── 01_basic_chatbot/   # Introduction to chatbots
+│   │   ├── 1a_basic_chatbot.py
+│   │   └── 1b_system_prompt.py
+│   ├── 02_conversation_memory/  # Memory strategies
+│   │   ├── 2a_no_memory.py
+│   │   ├── 2b_memory.py
+│   │   ├── 2c_memory_strategies.py
+│   │   └── 2d_summarize_memory.py
+│   ├── 03_agents_and_tools/     # Agentic systems
+│   │   ├── 3a_multi_agentic_system.py
+│   │   ├── 3b_tools_and_orchestration.py
+│   │   └── tools.py
+│   └── SOLUTIONS/          # Reference solutions
+│
+├── scripts/                 # Utility scripts
+│   └── download_model.py   # Model download helper
+│
+├── models/                  # GGUF models (gitignored)
+├── pyproject.toml          # Poetry dependencies
+├── .env.example            # Environment template
+└── README.md               # This file
 ```
 
-Notes on dependencies
----------------------
+## What You'll Learn## Prerequisites
 
-- `llama-cpp-python` (optional): enables inference using a GGUF model via the llama.cpp backend.
-- `sentence-transformers` and `faiss-cpu` (optional): used for RAG. The code includes a simple fallback retriever if these are not installed.
-- `langchain` and `pydantic` (optional, recommended): popular libraries for building agentic systems and structured pipelines. Install them to run `examples/agentic_langchain.py` and to use more advanced agent/RAG patterns.
+- **Python**: Version 3.10 or higher (3.12 recommended)
+- **Operating System**: Linux, macOS, or Windows
+- **Disk Space**: 2-5 GB for models and dependencies
+- **Memory**: Minimum 8 GB RAM (16 GB recommended for larger models)
+- **Python Knowledge**: Basic familiarity with Python (no ML experience required)
+- **Package Manager**: Poetry (will be installed in setup steps)
 
-Model provisioning
-------------------
+## Getting Started
 
-Two options to provide a model for local runs:
+**Complete these steps in order before running any exercises:**
 
-1. Manual: download a GGUF model and place it in `models/`, then set `MODEL_PATH` in a `.env` file (see `.env.example`).
+### 1. Clone the Repository
 
-2. Helper script: use `scripts\download_model.py` to download a model from a direct URL (if you have a link) or from Hugging Face (requires `huggingface_hub` and an access token). The helper is optional and documented in the script.
-
-
-Model requirement
------------------
-
-This workshop expects a local GGUF model file to be available in `models/`.
-
-You can provide a model in two ways:
-
-1. Manual: download a GGUF model and place it in `models/` and then set `MODEL_PATH` in a `.env` file (see `.env.example`).
-
-2. Helper script: use the included `scripts\download_model.py` to download a model from a direct URL or from Hugging Face (requires `huggingface-hub` and an access token). Example:
-
-```powershell
-python scripts\download_model.py --hf <huggingface-repo-id> --out models\your-model.gguf
+```bash
+git clone <repository-url>
+cd ai-chatbot-workshop
 ```
 
-Quick examples
---------------
+### 2. Set Up Python Environment
 
-Run the basic example (requires a local model):
+Ensure you have Python 3.9 or higher installed:
 
-```powershell
-python examples\basic_chat.py
+```bash
+python --version  # Should show Python 3.9 or higher
 ```
 
-Try memory-enabled conversation:
+If using `pyenv`, set the Python version:
 
-```powershell
-python examples\memory_chat.py
+```bash
+pyenv global 3.12.7  # Or your preferred 3.9+ version
 ```
 
-Agentic behaviour (simple tool calls):
+### 3. Install Poetry
 
-```powershell
-python examples\agentic_chat.py
+Poetry is a dependency management tool for Python. Install it globally:
+
+```bash
+pip install poetry
 ```
 
-RAG example: the retriever will try to use `sentence-transformers` if installed, otherwise it falls back to a simple keyword match.
+Verify the installation:
 
-```powershell
-python examples\rag_chat.py
+```bash
+poetry --version
 ```
 
-Workshop outline
-----------------
+### 4. Install Project Dependencies
 
-1. Environment and model provisioning (15–20 minutes).
-2. Prompt design and single-turn inference (15 minutes).
-3. Rolling memory for multi-turn coherence (20 minutes).
-4. Agentic behaviour: simple tools and decision logic (20 minutes).
-5. RAG: building a retriever and augmenting prompts (25 minutes).
+Install all required Python packages for the workshop:
 
-Exercises
----------
+```bash
+poetry install
+```
 
-- `01_extend_memory`: add summarization or vector-indexed memory.
-- `02_add_tools`: add real tools (web search, calculator) and secure execution.
-- `03_custom_prompting`: create and compare multiple system prompts.
+This command will:
+- Create a virtual environment for the project
+- Install all dependencies listed in `pyproject.toml`:
+  - `llama-cpp-python` - For running GGUF models locally
+  - `python-dotenv` - For environment configuration
+  - `requests` - For downloading models
+  - `huggingface-hub` - For accessing Hugging Face models
+  - `pytest` - For testing (dev dependency)
 
-If you want, I can automatically add a small demo model download (if you provide a permissibly-hosted URL) or wire up a specific Hugging Face model name and include exact commands to fetch it.
+**Note**: Installing `llama-cpp-python` may take a few minutes as it compiles llama.cpp bindings.
 
-License
--------
+### 5. Understanding GGUF Models
 
-This project uses the repository-level license.
+**What is GGUF?**
+
+GGUF (GPT-Generated Unified Format) is a file format designed for storing and running large language models efficiently on consumer hardware. Key benefits:
+
+- **Compact**: Models are quantized (compressed) to use less memory
+- **Fast**: Optimized for CPU inference without requiring a GPU
+- **Portable**: Single-file format that's easy to download and share
+- **Flexible**: Supports various quantization levels (Q4, Q5, Q8, etc.)
+
+**Quantization levels explained:**
+- **Q4_K_M** (4-bit): Smallest size, fastest, slight quality reduction (~638MB for TinyLlama)
+- **Q5_K_M** (5-bit): Balanced size and quality
+- **Q8_0** (8-bit): Larger size, better quality, closer to original model
+
+For this workshop, we use 4-bit quantized models for optimal performance on standard laptops.
+
+### 6. Download a GGUF Model
+
+You need a GGUF model file to run the chatbot exercises. 
+
+**Workshop Default: TinyLlama (REQUIRED)**
+
+For this workshop, we use **TinyLlama-1.1B** because it:
+- Downloads quickly (~638MB)
+- Runs fast on CPU-only machines
+- Requires minimal RAM (4-8GB)
+- Works well for learning chatbot concepts
+
+Download TinyLlama now:
+
+```bash
+poetry run python scripts/download_model.py \
+  --hf "TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF" \
+  --filename "tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf" \
+  --out models/tinyllama.gguf
+```
+
+This will download the model to `models/tinyllama.gguf` (created automatically).
+
+**Alternative Models (Optional)**
+
+If you have more resources available, you can try larger models:
+
+**Option B - Download Other Models from Hugging Face:**
+
+```bash
+# Example: Phi-3-mini (better quality, requires ~4GB RAM)
+poetry run python scripts/download_model.py \
+  --hf "microsoft/Phi-3-mini-4k-instruct-gguf" \
+  --filename "Phi-3-mini-4k-instruct-q4.gguf" \
+  --out models/phi3.gguf
+
+# Example: Mistral-7B (high quality, requires ~8GB RAM)
+poetry run python scripts/download_model.py \
+  --hf "TheBloke/Mistral-7B-Instruct-v0.2-GGUF" \
+  --filename "mistral-7b-instruct-v0.2.Q4_K_M.gguf" \
+  --out models/mistral.gguf
+```
+
+**Option C - Download from Direct URL:**
+
+```bash
+poetry run python scripts/download_model.py \
+  --url "<direct-download-url>" \
+  --out models/model.gguf
+```
+
+**Option D - Manual Download:**
+1. Visit [Hugging Face GGUF Models](https://huggingface.co/models?library=gguf)
+2. Find and download a GGUF model file
+3. Place it in the `models/` directory
+4. Update `MODEL_PATH` in your `.env` file
+
+**Recommended Models:**
+- **TinyLlama-1.1B** (~638MB) - Lightweight, fast, ideal for learning
+- **Phi-3-mini** (~2.3GB) - Better quality, still compact
+- **Mistral-7B** (~4GB) - High quality, requires more resources
+
+### 5. Install Dependencies
+
+Install all project dependencies using Poetry:
+
+```bash
+poetry install
+```
+
+This will:
+- Create a virtual environment
+- Install all required packages (llama-cpp-python, python-dotenv, requests, huggingface-hub)
+- Install development dependencies (pytest)
+
+
+### 7. Configure Environment Variables
+
+Copy the example environment file:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and configure your model path:
+
+```bash
+# .env file
+MODEL_PATH=./models/tinyllama.gguf  # Path to your downloaded model
+MODEL_DEVICE=cpu                     # Use 'cpu' (or 'gpu' if available)
+MAX_TOKENS=512                       # Maximum tokens to generate
+```
+
+**Important**: Make sure `MODEL_PATH` points to the model you downloaded in step 6.
+
+### 8. Verify Installation
+
+Test that everything is set up correctly:
+
+```bash
+# Run the basic chatbot exercise
+poetry run python exercises/01_basic_chatbot/1a_basic_chatbot.py
+```
+
+Expected output:
+```
+Chatbot initialized
+System prompt: You are a helpful assistant.
+Max tokens: 256
+Type 'exit' to quit.
+
+You: 
+```
+
+**Success!** If you see this prompt, your setup is complete. You can:
+- Type a message to test the chatbot
+- Type `exit` to quit
+- Proceed to the workshop exercises
+
+**Troubleshooting**: If you encounter errors, see the [Troubleshooting](#troubleshooting) section below.

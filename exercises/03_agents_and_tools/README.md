@@ -2,7 +2,7 @@
 
 ## Overview
 
-This exercise teaches you how to build sophisticated **agentic AI systems** using:
+This exercise introduces how to build sophisticated **agentic AI systems** using:
 - **LLM-based intent classification**
 - **Specialized agents** for different domains
 - **Tool-based capabilities** to extend agent functionality
@@ -19,7 +19,7 @@ This keeps the workshop **pedagogical** while teaching production-ready patterns
 
 ---
 
-## What You'll Learn
+## Overview Capabilities
 
 ### 1. **Multi-Agent System Setup** (Exercise 3a)
 Build a complete multi-agent system from scratch.
@@ -86,7 +86,7 @@ poetry run python exercises/03_agents_and_tools/3b_tools_and_orchestration.py
         ┌──────────┴────────┐  ┌──────┴───────────┐
         │  GreetingAgent    │  │ CalculatorAgent  │
         │  (no tools)       │  │  - calculator    │
-        └──────────┬────────┘  │  - advanced_math │
+        └──────────┬────────┘  │  - logarithm     │
                    │           │  - trigonometry* │
                    │           └──────┬───────────┘
         ┌──────────┴────────────────┐ │
@@ -121,12 +121,12 @@ poetry run python exercises/03_agents_and_tools/3b_tools_and_orchestration.py
 **Intent:** `calculate`  
 **Tools:**
 - `calculator`: Basic operations (+, -, *, /)
-- `advanced_math`: Square root, power, sin, cos, etc.
+- `logarithm`: Calculate the logarithm
 - `trigonometry`: Calculate trigonometric functions (added in 3b)
 
 **Example Requests:**
 - "What is 15 + 27?"
-- "Calculate the square root of 144"
+- "Calculate the logarithm of 100"
 - "What's the sine of 30?"
 
 **Why this demonstrates tools well?** All logic is self-contained, no external APIs needed.
@@ -280,9 +280,6 @@ After completing this exercise, you'll understand:
 - ✅ Agent orchestration and routing
 - ✅ Dynamic tool selection with LLMs
 
-**Next:** Exercise 4 - RAG (Retrieval-Augmented Generation)
-Learn how to give agents access to external knowledge bases!
-
 ---
 
 ## Troubleshooting
@@ -306,10 +303,3 @@ The LLM intent classification can be resource-intensive. If you encounter issues
 - Reduce temperature for faster inference
 
 ---
-
-## Further Reading
-
-- **Agentic Systems:** Multi-agent architectures in production
-- **Tool Use (Function Calling):** How LLMs invoke external functions
-- **Intent Recognition:** NLU techniques for understanding user requests
-- **LLM Orchestration:** Coordinating multiple AI agents

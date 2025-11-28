@@ -293,7 +293,6 @@ python scripts/download_model.py
 Make sure you're in the poetry environment:
 ```bash
 poetry install
-poetry shell
 ```
 
 ### Performance issues?

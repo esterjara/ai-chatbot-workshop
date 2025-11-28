@@ -22,23 +22,23 @@ Understand why memory is essential for conversations.
 
 ### Quick Start
 
-```powershell
-python exercises/02_conversation_memory/2a_no_memory.py
+```bash
+poetry run python exercises/02_conversation_memory/2a_no_memory.py
 ```
 
 ### The Experiment
 
 **Task 1**: Run the chatbot (without memory)
-```powershell
-python exercises/02_conversation_memory/2a_no_memory.py
+```bash
+poetry run python exercises/02_conversation_memory/2a_no_memory.py
 ```
 
 **Task 2**: Have this conversation:
 ```
-You: My name is Alice
-Assistant: Nice to meet you, Alice!
+You: I'm working on a Python project using Django
+Assistant: That's great! Django is...
 
-You: What is my name?
+You: What framework am I using?
 Assistant: [No context - can't answer! It forgot!]
 ```
 
@@ -77,8 +77,8 @@ Learn how memory buffer enables context awareness.
 
 ### Quick Start
 
-```powershell
-python exercises/02_conversation_memory/2b_memory.py
+```bash
+poetry run python exercises/02_conversation_memory/2b_memory.py
 ```
 
 ### The Solution Explained
@@ -87,16 +87,16 @@ python exercises/02_conversation_memory/2b_memory.py
 Memory Buffer (Last 3 turns = 6 messages):
 
 Turn 1:
-  User:      "My name is Alice"
-  Assistant: "Nice to meet you!"
+  User:      "I'm interested in machine learning and data science"
+  Assistant: "Great fields to explore!"
 
 Turn 2:
-  User:      "What is my name?"
-  Assistant: "Your name is Alice" ← Remembers! ✅
+  User:      "What are my interests?"
+  Assistant: "You're interested in ML and data science" ← Remembers! ✅
 
 Turn 3:
-  User:      "Tell me about myself"
-  Assistant: "You're Alice, ..." ← Still context! ✅
+  User:      "What topics should I focus on?"
+  Assistant: "Based on your interests in ML..." ← Still has context! ✅
 
 (When buffer fills, Turn 1 is dropped to make room)
 ```
@@ -104,65 +104,22 @@ Turn 3:
 ### The Experiment
 
 **Task 1**: Run the chatbot
-```powershell
-python exercises/02_conversation_memory/2b_memory.py
+```bash
+poetry run python exercises/02_conversation_memory/2b_memory.py
 ```
 
 **Task 2**: Have the SAME conversation as Exercise 2a:
 ```
-You: My name is Alice
-Assistant: Nice to meet you, Alice!
+You: I'm working on a Python project using Django
+Assistant: That's great! Django is...
 
-You: What is my name?
-Assistant: Your name is Alice! ✅
-```
-
-**Task 3**: Test the commands - IMPLEMENT THESE:
-- **`history` command** → See all stored messages (TODO - you implement this!)
-- **`clear` command** → Erase memory (TODO - you implement this!)
-
-### Workshop Exercise: Implement `history` and `clear` Commands
-
-In `2b_memory.py`, you'll find TODOs for the `history` and `clear` commands.
-
-**Task: Implement these two commands:**
-
-**1. Implement `history` command:**
-```python
-elif user_input.lower() == "history":
-    # TODO: Show conversation history
-    # Get messages from: chatbot.memory.get()
-    # Print each message with its role
-    # Format: "  ROLE: message_text"
-```
-
-**2. Implement `clear` command:**
-```python
-elif user_input.lower() == "clear":
-    # TODO: Clear the memory buffer
-    # Call: chatbot.memory.clear()
-    # Print confirmation message
-```
-
-**Test your implementation:**
-```
-You: My name is Alice
-You: history
-[Should show your message and assistant response]
-
-You: clear
-[Should confirm memory cleared]
-
-You: history
-[Should show empty or minimal messages]
-```
-
-### Task 4: Have a longer conversation:
-```
-You: I like Python and web development
-You: I'm learning machine learning
-You: What are my interests?
-You: Tell me about my learning journey
+You: What framework am I using?
+Assistant: You're using Django! ✅
+```: [Have more conversation...]
+You: stats
+[Should show increasing usage as buffer fills]
+```: What deployment tools am I using?
+You: Tell me about my architecture approach
 Assistant: [Full context maintained!]
 ```
 
@@ -204,8 +161,8 @@ Understand trade-offs in memory buffer sizing.
 
 ### Quick Start
 
-```powershell
-python exercises/02_conversation_memory/2c_memory_strategies.py
+```bash
+poetry run python exercises/02_conversation_memory/2c_memory_strategies.py
 ```
 
 ### The Experiments
@@ -219,11 +176,11 @@ memory_turns = 1  # Only 2 messages total
 
 Run and have a 5-message conversation:
 ```
-You: Tell me about yourself
-You: What did you say?
-You: Earlier, you said...
-You: Do you remember?
-You: What did you tell me?
+You: I'm debugging a database connection issue
+You: The error mentions timeout
+You: What was the error about?
+You: What issue was I debugging?
+You: Can you remember my first message?
 ```
 
 **Observation**: Limited context, forgets quickly, but fast response
@@ -256,41 +213,23 @@ Run and have a 15+ message conversation.
 
 ---
 
-### Workshop Exercise: Implement `stats` Command
+### Workshop Focus: Observe Different Buffer Sizes
 
-In `2c_memory_strategies.py`, you'll find a TODO for the `stats` command.
+The main learning objective is to **observe** how different `memory_turns` values affect conversations:
 
-**Task: Implement the `stats` command to display memory usage:**
+1. **Change the `memory_turns` value** in the code (1, 3, 5, or 10)
+2. **Re-run** the exercise
+3. **Have the same conversation** with each setting
+4. **Use the `history` command** to see what's in the buffer
+5. **Notice** how long the chatbot remembers things
 
-```python
-elif user_input.lower() == "stats":
-    # TODO: Show memory statistics
-    # Hints:
-    #   - Get history: chatbot.memory.get()
-    #   - Get capacity: chatbot.memory.capacity * 2
-    #   - Calculate usage %: 100 * len(history) // capacity
-    #   - Print: "Capacity: X, Used: Y/Z (P%)"
-```
-
-**Test your implementation:**
-```
-You: I like Python
-You: I work on web projects
-You: stats
-[Should show: Capacity: 6, Used: 4/6 (66%)]
-
-You: [Have more conversation...]
-You: stats
-[Should show increasing usage as buffer fills]
-```
-
-The `history` command is already implemented so you can observe the buffer contents while testing different memory_turns values.
+The `history` command lets you inspect the buffer contents at any time during your conversation.
 
 ### Available Commands in 2c
 
-```powershell
-history   → See current buffer contents
-stats     → See memory statistics
+```bash
+history   → See current buffer contents  
+clear     → Empty the memory buffer
 exit      → Quit chat
 ```
 
@@ -360,8 +299,8 @@ With Summaries:
 
 ### Quick Start
 
-```powershell
-python exercises/02_conversation_memory/2d_summarize_memory.py
+```bash
+poetry run python exercises/02_conversation_memory/2d_summarize_memory.py
 ```
 
 ### The Challenge: Implement summarize_memory()
@@ -375,10 +314,10 @@ In `2d_summarize_memory.py`, you'll find a TODO in the `summarize_memory()` meth
    ```
    Summarize this conversation in 2-3 lines:
    
-   User: My name is Alice and I work with Python
-   Assistant: That's great! Python is...
-   User: I'm interested in machine learning
-   Assistant: ML is a great field...
+   User: I'm working with Python and exploring web frameworks
+   Assistant: That's great! Python has excellent frameworks...
+   User: I'm particularly interested in FastAPI
+   Assistant: FastAPI is a modern framework...
    ```
 
 3. **Call the model** to generate a summary
@@ -411,7 +350,7 @@ def summarize_memory(self):
     for role, text in old_messages:
         conversation_text += f"{role.upper()}: {text}\n"
     
-    prompt = f"""Summarize this conversation briefly (2-3 lines):
+    prompt = f"""Summarize this technical conversation briefly (2-3 lines):
 
 {conversation_text}
 
@@ -431,8 +370,8 @@ Summary:"""
 
 ### Testing Your Implementation
 
-1. Edit `exercise_2d.py` and implement `summarize_memory()`
-2. Run: `python exercises/02_conversation_memory/exercise_2d.py`
+1. Edit `2d_summarize_memory.py` and implement `summarize_memory()`
+2. Run: `poetry run python exercises/02_conversation_memory/2d_summarize_memory.py`
 3. Have a long conversation (20+ messages)
 4. Type `stats` to see if summaries are being created
 5. Type `summary` to read the stored summaries
@@ -442,8 +381,9 @@ Summary:"""
 ```
 After ~10 messages:
   → First 4 messages trigger summarization
-  → You: "What did we talk about at the beginning?"
-  → Assistant: "Based on our summary, we discussed..."
+  → You: "What did we discuss at the beginning?"
+  → Assistant: "Based on our summary, we discussed your microservices
+              architecture and the challenges with Docker deployment..."
   
 After 20 messages:
   → Multiple summaries stored
@@ -477,9 +417,9 @@ After implementing `summarize_memory()`:
 1. **Experiment**: What if you store multiple summaries?
    ```python
    self.summaries = [
-       "Summary 1: Started learning Python",
-       "Summary 2: Discussed web frameworks",
-       "Summary 3: Learning about databases"
+       "Summary 1: Discussed microservices and Docker deployment",
+       "Summary 2: Explored database optimization strategies",
+       "Summary 3: Reviewed API authentication approaches"
    ]
    ```
 
@@ -536,13 +476,15 @@ Reference implementations are available in `SOLUTIONS/`
 
 ## Next Steps
 
-→ Go to **Exercise 3: Retrieval-Augmented Generation (RAG)**
+→ Go to **Exercise 3: Agents and Tools**
 
-In Exercise 3, you'll learn how to add external documents to extend knowledge beyond conversation history.
+In Exercise 3, you'll learn how to build multi-agent systems with:
+- Intent classification and routing
+- Tool calling and orchestration
+- Agents that make decisions
 
 The combination of:
 - Memory (from Exercise 2)
-- RAG documents (from Exercise 3)
-- Agents & Tools (from Exercise 4)
+- Agents & Tools (from Exercise 3)
 
 ...is what powers modern AI assistants!

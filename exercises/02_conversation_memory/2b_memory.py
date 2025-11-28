@@ -1,5 +1,5 @@
 """
-Exercise 2b: Add Memory - The Solution
+Exercise 2b: Add Memory
 This chatbot HAS memory. It remembers the conversation.
 Compare with Exercise 2a to see the difference!
 """
@@ -28,39 +28,44 @@ def main():
     )
     
     print("Exercise 2b: With memory chatbot (buffer: {0} turns)".format(memory_turns))
-    print("Try: 'My name is Alice' then 'What is my name?'")
     print("Commands: 'history', 'clear', 'exit'\n")
     
-    # Chat loop
+    # Chat loop - TODO: Implement history and clear commands
     while True:
         try:
-            user_input = input("You: ").strip()
-        except EOFError:
+            user_input = input("👤 You: ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\nGoodbye!")
             break
         
         if user_input.lower() == "exit":
+            print("Goodbye!")
             break
         elif user_input.lower() == "history":
             # TODO: EXERCISE - Show conversation history
             # Hint: Get messages from chatbot.memory.get()
             # The memory returns a list of tuples: (role, content)
-            # Loop through and unpack each tuple: for role, content in messages:
-            # Print each message in format: "  ROLE: content"
-            # Don't forget to print a newline at the end
+            # Loop through and print each message
+            # Format: "  ROLE: content"
             
-            pass
+            print("TODO: Implement history command\n")
+            continue
         elif user_input.lower() == "clear":
             # TODO: EXERCISE - Clear the memory buffer
             # Hint: Call chatbot.memory.clear()
             # Then print "Memory cleared.\n" to confirm
             
-            pass
+            print("TODO: Implement clear command\n")
+            continue
         
         if not user_input:
             continue
         
-        response = chatbot.generate_response(user_input)
-        print("Assistant: {0}\n".format(response))
+        try:
+            response = chatbot.generate_response(user_input)
+            print("🤖 Assistant: {0}\n".format(response))
+        except Exception as e:
+            print("Error: {0}\n".format(e))
 
 
 if __name__ == "__main__":

@@ -3,7 +3,6 @@ Basic Chatbot using llama-cpp-python.
 """
 
 from typing import Optional
-from .config import load_config
 from .model_loader import load_model, generate_text
 from llama_cpp import Llama
 import logging
@@ -71,7 +70,7 @@ class BasicChatbot:
         """Start an interactive chat loop."""
         
         while True:
-            user_input = input("You: ").strip()
+            user_input = input("👤 User: ").strip()
             
             if user_input.lower() == "exit":
                 print("Goodbye!")
@@ -82,35 +81,6 @@ class BasicChatbot:
             
             try:
                 response = self.generate_response(user_input)
-                print(f"Assistant: {response}\n")
+                print(f"🤖 Assistant: {response}\n")
             except Exception as e:
                 print(f"Error: {e}\n")
-
-
-# Legacy Assistant class for backwards compatibility
-class Assistant:
-    """Legacy class for backwards compatibility."""
-    
-    def __init__(self, config=None, model=None, memory=None, agent=None):
-        self.config = config or load_config()
-        self.memory = memory
-        self.agent = agent
-        self.model = model or load_model(self.config.model_path)
-    
-    def chat_once(self, user_input: str) -> str:
-        """Generate a single response."""
-        prompt = f"User: {user_input}\nAssistant:"
-        return generate_text(self.model, prompt, max_tokens=self.config.max_tokens)
-    
-    def run_console(self):
-        """Run interactive chat loop."""
-        print("Starting console chat. Type 'exit' to quit.")
-        while True:
-            user_input = input("You: ")
-            if user_input.strip().lower() in ("exit", "quit"):
-                break
-            try:
-                reply = self.chat_once(user_input)
-                print(f"Assistant: {reply}")
-            except Exception as e:
-                print(f"Error: {e}")

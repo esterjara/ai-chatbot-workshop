@@ -33,7 +33,41 @@ def load_model(model_path: str, device: str = "cpu", **kwargs) -> Any:
     return model
 
 
-def generate_text(model: Any, prompt: str, max_tokens: int = 256, temperature: float = 0.7, **kwargs) -> str:
+def load_embedding_model(model_path: str, **kwargs) -> Any:
+    """Load a local GGUF model for embeddings via `llama-cpp-python`.
+    
+    This function loads a model specifically configured for generating embeddings.
+    It sets embedding=True to enable the embed() method on the model.
+    
+    Args:
+        model_path: Path to the GGUF model file
+        **kwargs: Additional Llama initialization parameters
+        
+    Returns:
+        A Llama model instance configured for embeddings
+    """
+    if not model_path or not os.path.exists(model_path):
+        raise FileNotFoundError(
+            f"Model file not found at '{model_path}'.\n"
+            "Place a GGUF model in the `models/` folder or run `scripts/download_model.py`.\n"
+            "See README.md for instructions and examples."
+        )
+
+    try:
+        from llama_cpp import Llama
+    except Exception as e:
+        raise ImportError(
+            "`llama-cpp-python` is required to load local GGUF models but could not be imported.\n"
+            "Install it with `pip install llama-cpp-python` and ensure your environment supports it.\n"
+            "Alternatively, use a different backend and adapt `src/chatbot/model_loader.py`."
+        ) from e
+
+    _logger.info("Loading embedding model via llama_cpp: %s", model_path)
+    model = Llama(model_path=model_path, n_ctx=2048, n_gpu_layers=0, verbose=False, embedding=True)
+    return model
+
+
+def generate_text(model: Any, prompt: str, max_tokens: int = 256, temperature: float = 0.7, response_format: dict = None, **kwargs) -> str:
     """Generate text from a prompt using the loaded model.
     
     Args:
@@ -47,14 +81,16 @@ def generate_text(model: Any, prompt: str, max_tokens: int = 256, temperature: f
         Generated text as a string
     """
     try:
-        output = model(
-            prompt,
-            max_tokens=max_tokens,
-            temperature=temperature,
-            stop=["User:", "\n\n"],
-            echo=False,
+        # Build generation parameters
+        gen_params = {
+            "max_tokens": max_tokens,
+            "temperature": temperature,
+            "stop": ["User:", "\n\n"],
+            "echo": False,
             **kwargs
-        )
+        }
+        
+        output = model(prompt, **gen_params)
         
         # Extract text from the response
         if isinstance(output, dict) and "choices" in output:

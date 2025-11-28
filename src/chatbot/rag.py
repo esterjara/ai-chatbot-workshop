@@ -6,7 +6,7 @@ Supports both keyword search and semantic search with embeddings.
 from typing import List, Tuple, Optional
 import math
 import os
-from .model_loader import generate_text
+from .model_loader import generate_text, load_model, load_embedding_model
 from .memory import RollingMemory
 from llama_cpp import Llama
 import logging
@@ -129,29 +129,60 @@ class RAGChatbot:
     
     def __init__(
         self,
-        model: Llama,
+        model_path: str = "./models/tinyllama.gguf",
         system_prompt: str = "You are a helpful assistant.",
         max_tokens: int = 256,
         retrieve_top_k: int = 3,
-        embedding_model: Optional[Llama] = None,
+        embedding_model_path: Optional[str] = None,
         retrieval_mode: str = "keyword"
     ):
         """
         Initialize the RAGChatbot.
         
         Args:
-            model: Llama model instance for text generation
+            model_path: Path to GGUF model file for text generation
             system_prompt: System prompt for the model
             max_tokens: Maximum tokens per response
             retrieve_top_k: Number of documents to retrieve per query
-            embedding_model: Llama model with embed=True for semantic search
+            embedding_model_path: Path to GGUF model file for embeddings (required for semantic search)
             retrieval_mode: "keyword" or "semantic" search mode
         """
-        self.model = model
         self.system_prompt = system_prompt
         self.max_tokens = max_tokens
         self.retrieve_top_k = retrieve_top_k
         self.retrieval_mode = retrieval_mode
+        self.model: Optional[Llama] = None
+        
+        # Load LLM for text generation (same as BasicChatbot)
+        try:
+            self.model = load_model(model_path)
+        except Exception as e:
+            raise RuntimeError(
+                f"Failed to load model from {model_path}: {e}\n"
+                "Ensure the model file exists and llama-cpp-python is installed."
+            )
+        
+        # Load embedding model if path is provided
+        embedding_model = None
+        if embedding_model_path:
+            try:
+                embedding_model = load_embedding_model(embedding_model_path)
+                _logger.info(f"Loaded embedding model from {embedding_model_path}")
+            except Exception as e:
+                _logger.warning(
+                    f"Failed to load embedding model from {embedding_model_path}: {e}\n"
+                    "Falling back to keyword search mode."
+                )
+                if self.retrieval_mode == "semantic":
+                    _logger.warning("Switching to keyword mode due to missing embedding model")
+                    self.retrieval_mode = "keyword"
+        elif self.retrieval_mode == "semantic":
+            _logger.warning(
+                "Semantic search mode requires an embedding model. "
+                "Switching to keyword mode."
+            )
+            self.retrieval_mode = "keyword"
+        
         self.vector_store = VectorStore(embedding_model)
         self.memory = RollingMemory(capacity=10)
     

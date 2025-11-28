@@ -9,15 +9,15 @@ Run `1a_basic_chatbot.py` and chat with your first AI chatbot!
 
 ## Quick Start
 
-```powershell
-python exercises/01_basic_chatbot/1a_basic_chatbot.py
+```bash
+poetry run python exercises/01_basic_chatbot/1a_basic_chatbot.py
 ```
 
 ## Todo in basic_chatbot.py
 
 **Task 1**: Run the chatbot
-```powershell
-python exercises/01_basic_chatbot/1a_basic_chatbot.py
+```bash
+poetry run python exercises/01_basic_chatbot/1a_basic_chatbot.py
 ```
 
 Have a simple conversation:
@@ -63,8 +63,8 @@ A system prompt:
 
 ## Quick Start
 
-```powershell
-python exercises/01_basic_chatbot/1b_system_prompt.py
+```bash
+poetry run python exercises/01_basic_chatbot/1b_system_prompt.py
 ```
 
 ## Todo in system_prompt.py

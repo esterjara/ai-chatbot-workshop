@@ -1,7 +1,7 @@
 # Exercise 1a: Create Your First Chatbot
 
 ## Objective
-Learn how to load and run a basic chatbot using a local LLM.
+Load and run a basic chatbot using a local LLM.
 
 ## What You'll Do
 
@@ -51,7 +51,7 @@ Have a simple conversation:
 # Exercise 1b: Modify the System Prompt
 
 ## Objective
-Learn how system prompts control chatbot behavior and personality.
+Investigate how system prompts control chatbot behavior and personality.
 
 ## What is a System Prompt?
 

@@ -11,34 +11,59 @@ Key ideas:
 4. Store summary for long-term memory
 """
 
-from src.chatbot.memory import MemoryChatbot, RollingMemory
-from src.chatbot.model_loader import load_model, generate_text
 from llama_cpp import Llama
 from typing import Optional
+from dotenv import load_dotenv
+from chatbot import MemoryChatbot, RollingMemory
+from chatbot import load_model, generate_text
+
+load_dotenv()
 
 
 class HybridMemoryChatbot(MemoryChatbot):
     """
     Chatbot with hybrid memory: buffer + summaries.
+    
+    When memory buffer is full, old messages are summarized instead of discarded.
+    This maintains long-term context while keeping token usage reasonable.
     """
     
     def __init__(
         self,
-        model: Llama,
+        model_path: str,
         system_prompt: str = "You are a helpful assistant.",
         max_tokens: int = 256,
         max_memory_turns: int = 5,
         summary_trigger: int = 10
     ):
+        """
+        Initialize hybrid memory chatbot.
+        
+        Args:
+            model_path: Path to the model file
+            system_prompt: System prompt for the model
+            max_tokens: Max tokens per response
+            max_memory_turns: Number of turns before triggering summary
+            summary_trigger: Message count that triggers summarization
+        """
         super().__init__(
-            model=model,
+            model_path=model_path,
             system_prompt=system_prompt,
             max_tokens=max_tokens,
             max_memory_turns=max_memory_turns
         )
         self.summary_trigger = summary_trigger
         self.message_count = 0
-        self.summaries: list = []
+        self.summaries: list = []  # Store summaries
+        self.model: Optional[Llama] = None
+        
+        try:
+            self.model = load_model(model_path)
+        except Exception as e:
+            raise RuntimeError(
+                f"Failed to load model from {model_path}: {e}\n"
+                "Ensure the model file exists and llama-cpp-python is installed."
+            )
     
     def summarize_memory(self) -> Optional[str]:
         """
@@ -216,13 +241,14 @@ def main():
     print("=" * 60 + "\n")
     
     # Load model
-    model = load_model("./models/tinyllama.gguf")
+    model_path = os.getenv("MODEL_PATH", "./models/tinyllama.gguf")
+    max_tokens = int(os.getenv("MAX_TOKENS", 256))
     
     # Create hybrid chatbot
     chatbot = HybridMemoryChatbot(
-        model=model,
+        model_path=model_path,
         system_prompt="You are a thoughtful assistant. Use context from previous parts of the conversation.",
-        max_tokens=256,
+        max_tokens=max_tokens,
         max_memory_turns=3,      # Keep last 6 messages
         summary_trigger=6         # Summarize every 6 messages
     )

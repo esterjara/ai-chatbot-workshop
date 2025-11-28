@@ -1,10 +1,10 @@
 # From Zero to Chatbot: Create Your Own Chatbot with Python
 
-This repository contains the hands-on materials for the **"From Zero to Chatbot"** workshop. This technical workshop guides you through building an AI assistant from scratch using Python and local language models. You'll learn practical engineering patterns for deploying compact language models locally, implementing conversation memory, building tool-based agentic systems, and creating maintainable chat applications.
+This repository demonstrates the step-by-step development of a local AI chatbot using Python and compact open-source language models. It includes environment setup, model loading, structured interaction loops, and prompt design, along with a rolling memory component to maintain coherent multi-turn conversations.
 
-The workshop emphasizes clear, reproducible patterns and exposes real-world trade-offs and design choices you'll encounter when building chatbot systems with local models.
+The repository also illustrates agentic behavior through modular agents and tool-based orchestration, enabling autonomous decision-making and task handling. By exploring these components, it provides a clear, practical blueprint for building a fully functional, maintainable chatbot with local AI models, highlighting key design patterns and trade-offs in real-world deployments.
 
-## What You'll Learn
+## Overview of Capabilities
 
 1. **Environment & Provisioning**
    - Create reproducible Python environments with Poetry
@@ -80,7 +80,7 @@ poetry run python exercises/02_conversation_memory/2b_memory.py
 # Exercise 2c: Memory strategies
 poetry run python exercises/02_conversation_memory/2c_memory_strategies.py
 
-# Exercise 2d: Summarization memory
+# Exercise 2d: Summarization memory (OPTIONAL)
 poetry run python exercises/02_conversation_memory/2d_summarize_memory.py
 
 # Exercise 3a: Multi-agentic system

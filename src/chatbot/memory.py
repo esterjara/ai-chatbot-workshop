@@ -3,8 +3,10 @@ Conversation memory management.
 """
 
 from collections import deque
-from typing import List, Tuple
-from .model_loader import generate_text, load_model
+from typing import List, Tuple, Optional
+from .model_loader import load_model
+from .text_generator import generate_text
+from .chat_utils import interactive_chat
 from llama_cpp import Llama
 import logging
 
@@ -112,37 +114,3 @@ class MemoryChatbot:
         except Exception as e:
             _logger.error(f"Generation failed: {e}")
             raise
-    
-    def chat(self):
-        """Start an interactive chat loop with memory."""
-        print(f"Memory Chatbot initialized")
-        print(f"System prompt: {self.system_prompt}")
-        print(f"Memory buffer: {self.memory.capacity} turns")
-        print("Commands: 'exit', 'clear', 'history'\n")
-        
-        while True:
-            user_input = input("You: ").strip()
-            
-            if user_input.lower() == "exit":
-                print("Goodbye!")
-                break
-            
-            if user_input.lower() == "clear":
-                self.memory.clear()
-                print("Memory cleared.\n")
-                continue
-            
-            if user_input.lower() == "history":
-                print("\nConversation History:")
-                print(self.get_history_string())
-                print()
-                continue
-            
-            if not user_input:
-                continue
-            
-            try:
-                response = self.generate_response(user_input)
-                print(f"Assistant: {response}\n")
-            except Exception as e:
-                print(f"Error: {e}\n")

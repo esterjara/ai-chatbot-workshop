@@ -3,7 +3,9 @@ Basic Chatbot using llama-cpp-python.
 """
 
 from typing import Optional
-from .model_loader import load_model, generate_text
+from .model_loader import load_model
+from .text_generator import generate_response
+from .chat_utils import interactive_chat
 from llama_cpp import Llama
 import logging
 
@@ -15,6 +17,7 @@ class BasicChatbot:
     A simple chatbot that responds to user queries using a local LLM.
     
     This is the foundation for all other chatbot types.
+    Uses the shared generate_response() function for consistency across exercises.
     """
     
     def __init__(
@@ -47,18 +50,20 @@ class BasicChatbot:
         """
         Generate a response to user input.
         
+        Uses the shared generate_response() function for consistency.
+        
         Args:
             user_input: The user's message
             
         Returns:
             The model's response
         """
-        full_prompt = f"{self.system_prompt}\n\nUser: {user_input}\nAssistant:"
-        
         try:
-            response = generate_text(
-                self.model,
-                full_prompt,
+            response = generate_response(
+                model=self.model,
+                user_input=user_input,
+                system_prompt=self.system_prompt,
+                conversation_history="",  # No history in BasicChatbot
                 max_tokens=self.max_tokens
             )
             return response
@@ -67,20 +72,10 @@ class BasicChatbot:
             raise
     
     def chat(self):
-        """Start an interactive chat loop."""
-        
-        while True:
-            user_input = input("👤 User: ").strip()
-            
-            if user_input.lower() == "exit":
-                print("Goodbye!")
-                break
-            
-            if not user_input:
-                continue
-            
-            try:
-                response = self.generate_response(user_input)
-                print(f"🤖 Assistant: {response}\n")
-            except Exception as e:
-                print(f"Error: {e}\n")
+        """Start an interactive chat loop using shared chat utility."""
+        system_info = f"System prompt: {self.system_prompt}"
+        interactive_chat(
+            generate_response_fn=self.generate_response,
+            chatbot_name="Basic Chatbot",
+            system_info=system_info
+        )

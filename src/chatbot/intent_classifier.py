@@ -9,7 +9,7 @@ All prompts are defined in prompts.py for easier maintenance.
 
 from typing import Dict, Any, Optional
 from dataclasses import dataclass
-from .model_loader import generate_text
+from .text_generator import generate_text
 from . import prompts
 from llama_cpp import Llama
 import logging

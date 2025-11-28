@@ -26,7 +26,7 @@ import logging
 
 from .tool import Tool
 from .intent_classifier import Intent, LLMIntentClassifier
-from .model_loader import generate_text
+from .text_generator import generate_text, generate_response
 from . import prompts
 from llama_cpp import Llama
 

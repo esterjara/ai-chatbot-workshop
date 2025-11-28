@@ -38,13 +38,15 @@ def main():
     
     # Start chat with memory buffer
     print("Exercise 2b: With memory chatbot (buffer size: {0} turns)".format(memory_turns))
-    print("Try: 'My name is Alice' then 'What is my name?' to see memory in action")
+    print("Try this conversation to test memory:")
+    print("  1. I like Python and AI development'")
+    print("  2. 'What are my interests'")
     print("Commands: 'history' (show memory), 'clear' (erase), 'exit' (quit)\n")
     
     # Chat loop
     while True:
         try:
-            user_input = input("You: ").strip()
+            user_input = input("👤 You: ").strip()
         except EOFError:
             break
         
@@ -72,7 +74,7 @@ def main():
         
         # Generate response using memory
         response = chatbot.generate_response(user_input)
-        print("Assistant: {0}\n".format(response))
+        print("🤖 Assistant: {0}\n".format(response))
 
 
 if __name__ == "__main__":

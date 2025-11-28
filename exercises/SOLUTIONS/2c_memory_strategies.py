@@ -53,7 +53,7 @@ def main():
     message_count = 0
     while True:
         try:
-            user_input = input("You: ").strip()
+            user_input = input("👤 You: ").strip()
         except EOFError:
             break
         
@@ -84,7 +84,7 @@ def main():
         
         message_count += 1
         response = chatbot.generate_response(user_input)
-        print("Assistant: {0}\n".format(response))
+        print("🤖 Assistant: {0}\n".format(response))
 
 
 if __name__ == "__main__":

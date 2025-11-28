@@ -11,6 +11,7 @@ Key ideas:
 4. Store summary for long-term memory
 """
 
+import os
 from llama_cpp import Llama
 from typing import Optional
 from dotenv import load_dotenv
@@ -169,7 +170,7 @@ Summary:""".format(conversation_text)
         
         while True:
             try:
-                user_input = input("You: ").strip()
+                user_input = input("👤 You: ").strip()
             except EOFError:
                 break
             
@@ -213,7 +214,7 @@ Summary:""".format(conversation_text)
             
             # Generate response
             response = self.generate_response(user_input)
-            print("Assistant: {0}\n".format(response))
+            print("🤖 Assistant: {0}\n".format(response))
 
 
 def main():

@@ -176,23 +176,25 @@ ai-chatbot-workshop/
 │   ├── agent.py             # Agent and orchestration
 │   ├── intent_classifier.py # Intent classification
 │   ├── tool.py              # Tool definitions
-│   ├── prompts.py           # Centralized prompt templates
-│   └── rag.py               # RAG (placeholder for future)
+│   └── prompts.py           # Centralized prompt templates
 │
 ├── exercises/               # Workshop exercises
 │   ├── 01_basic_chatbot/   # Introduction to chatbots
+│   │   ├── solutions/
 │   │   ├── 1a_basic_chatbot.py
 │   │   └── 1b_system_prompt.py
 │   ├── 02_conversation_memory/  # Memory strategies
+│   │   ├── solutions/
 │   │   ├── 2a_no_memory.py
 │   │   ├── 2b_memory.py
 │   │   ├── 2c_memory_strategies.py
 │   │   └── 2d_summarize_memory.py
-│   ├── 03_agents_and_tools/     # Agentic systems
-│   │   ├── 3a_multi_agentic_system.py
-│   │   ├── 3b_tools_and_orchestration.py
-│   │   └── tools.py
-│   └── SOLUTIONS/          # Reference solutions
+│   └── 03_agents_and_tools/     # Agentic systems
+│       ├── solutions/
+│       ├── 3a_multi_agentic_system.py
+│       ├── 3b_tools_and_orchestration.py
+│       └── tools.py
+│
 │
 ├── scripts/                 # Utility scripts
 │   └── download_model.py   # Model download helper
@@ -406,5 +408,3 @@ You:
 - Type a message to test the chatbot
 - Type `exit` to quit
 - Proceed to the workshop exercises
-
-**Troubleshooting**: If you encounter errors, see the [Troubleshooting](#troubleshooting) section below.

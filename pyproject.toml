@@ -10,17 +10,22 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
-
-# llama-cpp-python using prebuilt CPU wheels (avoids compilation)
-llama-cpp-python = { version = "0.3.2", extras = ["server"], source = "llama_wheels" }
-
 python-dotenv = "^1.0.1"
 requests = "^2.32.3"
 huggingface-hub = "^0.26.2"
 
+# Cross-platform llama-cpp-python
+# Default (Linux) - PyPI
+llama-cpp-python = { version = "0.3.3", markers = "sys_platform != 'win32'" }
+
+# Windows-specific (CPU wheel) using a source
+[tool.poetry.group.win.dependencies]
+llama-cpp-python = { version = "0.3.2", source = "llama_wheels", markers = "sys_platform == 'win32'" }
+
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0.1"
 
+# Windows-specific wheel source
 [[tool.poetry.source]]
 name = "llama_wheels"
 url = "https://abetlen.github.io/llama-cpp-python/whl/cpu"

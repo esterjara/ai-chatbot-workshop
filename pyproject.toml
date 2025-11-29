@@ -1,21 +1,30 @@
 [tool.poetry]
-name = "ai-chatbot"
+name = "ai-chatbot-workshop"
 version = "0.1.0"
-description = "Educational scaffold for a local AI chatbot workshop"
+description = "Local chatbot workshop using GGUF models, llama-cpp-python, agents, memory, and tools."
+authors = ["Ester Jara esterjaralorente00@gmail.com"]
 readme = "README.md"
-authors = ["Ester Jara"]
-license = "MIT"
-packages = [{include = "chatbot", from = "src"}]
+packages = [
+    { include = "chatbot", from = "src" }
+]
 
 [tool.poetry.dependencies]
-python = ">=3.10"
-python-dotenv = "*"
-llama-cpp-python = "*"
-requests = "*"
-huggingface-hub = "*"
+python = ">=3.10,<3.13"
+
+# llama-cpp-python using prebuilt CPU wheels (avoids compilation)
+llama-cpp-python = { version = "0.3.2", extras = ["server"], source = "llama_wheels" }
+
+python-dotenv = "^1.0.1"
+requests = "^2.32.3"
+huggingface-hub = "^0.26.2"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "*"
+pytest = "^9.0.1"
+
+[[tool.poetry.source]]
+name = "llama_wheels"
+url = "https://abetlen.github.io/llama-cpp-python/whl/cpu"
+priority = "explicit"
 
 [build-system]
 requires = ["poetry-core"]

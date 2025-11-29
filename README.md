@@ -425,3 +425,95 @@ You:
 - Type a message to test the chatbot
 - Type `exit` to quit
 - Proceed to the workshop exercises
+
+## Troubleshooting: Installing `llama-cpp-python` on Windows
+
+When installing `llama-cpp-python`, you may encounter errors related to building wheels, such as:
+
+```
+CMake Error: CMAKE_C_COMPILER not set, after EnableLanguage
+CMake Error: CMAKE_CXX_COMPILER not set, after EnableLanguage
+```
+
+These errors occur because `llama-cpp-python` requires **CMake** and a C/C++ compiler to build on Windows. To fix this, follow the steps below.
+
+## Using WSL (Windows Subsystem for Linux) with VSCode (Recommended)
+
+If you're on Windows and want to avoid CMake and compiler issues when installing `llama-cpp-python`, the easiest approach is to use **WSL2 with Ubuntu**. This gives you a Linux environment where `llama-cpp-python` installs without compilation errors.
+
+### 1️⃣ Install WSL2 and Ubuntu
+
+Open **PowerShell as Administrator** and run:
+
+```
+wsl --install
+wsl --set-default-version 2
+```
+This installs WSL2 and Ubuntu automatically (on Windows 11).
+
+On Windows 10, you may need to enable the WSL feature manually and install Ubuntu from the Microsoft Store.
+
+Verify installation:
+```
+wsl --list --verbose
+```
+You should see your Ubuntu distribution with version 2.
+
+### 2️⃣ Open your project in VSCode using WSL
+Install the Remote – WSL extension in VSCode.
+
+Open a new WSL window: `Ctrl+Shift+P → Remote-WSL: New Window.`
+
+Open your project folder inside this WSL window.
+You are now working in a Linux environment within Windows.
+
+## CMake & C++ Compiler
+
+### 1️⃣ Install CMake via terminal
+
+Using **winget** (Windows 10/11):
+```
+winget install --id Kitware.CMake --source winget
+```
+
+Verify installation:
+```
+cmake --version
+```
+
+You should see the installed version number.
+
+---
+
+### 2️⃣ Ensure a C/C++ compiler is available
+
+Install the **Visual Studio Build Tools** with C++ support:
+
+Download from https://visualstudio.microsoft.com/visual-cpp-build-tools/
+
+Select "Desktop development with C++" workload
+
+Complete the installation
+
+This provides `cl.exe` and `nmake` which are required to compile `llama-cpp-python` on Windows.
+
+---
+
+### 3️⃣ Reinstall `llama-cpp-python`
+
+After installing CMake and the build tools, install the package again:
+```
+pip install llama-cpp-python
+```
+
+This time the wheel should build successfully.
+
+---
+
+### Optional: Use pre-built wheels (CPU only)
+
+For some Python versions, pre-built wheels are available that avoid compilation:
+```
+pip install llama-cpp-python --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+```
+⚠️ Note: Pre-built wheels may not exist for all Python versions (e.g., Python 3.12 on Windows). If no compatible wheel is found, installation will attempt to compile from source, requiring CMake and a compiler.
